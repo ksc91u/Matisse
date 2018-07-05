@@ -54,7 +54,7 @@ public final class SelectionSpec {
     public boolean originalable;
     public int originalMaxSize;
     public OnCheckedListener onCheckedListener;
-
+    public boolean quickSelect;
     private SelectionSpec() {
     }
 
@@ -88,6 +88,7 @@ public final class SelectionSpec {
         hasInited = true;
         originalable = false;
         originalMaxSize = Integer.MAX_VALUE;
+        quickSelect = false;
     }
 
     public boolean singleSelectionModeEnabled() {

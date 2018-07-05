@@ -50,9 +50,12 @@ public class AlbumMediaAdapter extends
     private OnMediaClickListener mOnMediaClickListener;
     private RecyclerView mRecyclerView;
     private int mImageResize;
+    private boolean quickSelect = false;
 
-    public AlbumMediaAdapter(Context context, SelectedItemCollection selectedCollection, RecyclerView recyclerView) {
+    public AlbumMediaAdapter(Context context, SelectedItemCollection selectedCollection,
+                             RecyclerView recyclerView, boolean quickSelect) {
         super(null);
+        this.quickSelect = quickSelect;
         mSelectionSpec = SelectionSpec.getInstance();
         mSelectedCollection = selectedCollection;
 
@@ -121,6 +124,9 @@ public class AlbumMediaAdapter extends
             ));
             mediaViewHolder.mMediaGrid.bindMedia(item);
             mediaViewHolder.mMediaGrid.setOnMediaGridClickListener(this);
+            if(quickSelect){
+                mediaViewHolder.mMediaGrid.hideCheck();
+            }
             setCheckStatus(item, mediaViewHolder.mMediaGrid);
         }
     }
@@ -258,6 +264,8 @@ public class AlbumMediaAdapter extends
 
     public interface CheckStateListener {
         void onUpdate();
+
+        void onQuick(Item item);
     }
 
     public interface OnMediaClickListener {

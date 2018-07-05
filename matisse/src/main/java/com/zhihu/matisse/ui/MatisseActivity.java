@@ -89,6 +89,7 @@ public class MatisseActivity extends AppCompatActivity implements
     private LinearLayout mOriginalLayout;
     private CheckRadioView mOriginal;
     private boolean mOriginalEnable;
+    private boolean quickSelect = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +102,12 @@ public class MatisseActivity extends AppCompatActivity implements
             finish();
             return;
         }
+
+        quickSelect = SelectionSpec.getInstance().quickSelect;
+
         setContentView(R.layout.activity_matisse);
+
+        findViewById(R.id.bottom_toolbar).setVisibility(quickSelect? View.GONE: View.VISIBLE);
 
         if (mSpec.needOrientationRestriction()) {
             setRequestedOrientation(mSpec.orientation);
@@ -385,6 +391,7 @@ public class MatisseActivity extends AppCompatActivity implements
             mContainer.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
             Fragment fragment = MediaSelectionFragment.newInstance(album);
+            ((MediaSelectionFragment)fragment).setQuickSelect(quickSelect);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, fragment, MediaSelectionFragment.class.getSimpleName())
@@ -401,10 +408,45 @@ public class MatisseActivity extends AppCompatActivity implements
             mSpec.onSelectedListener.onSelected(
                     mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
         }
+
+        if(quickSelect){
+            Intent result = new Intent();
+            ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
+            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
+            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            setResult(RESULT_OK, result);
+            finish();
+        }
+    }
+
+    @Override
+    public void onQuick(Item item) {
+        if(quickSelect){
+            Intent result = new Intent();
+            ArrayList<Uri> selectedUris = new ArrayList<Uri>();
+            selectedUris.add(item.uri);
+            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            ArrayList<String> selectedPaths = new ArrayList<String>();
+            selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
+            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            setResult(RESULT_OK, result);
+            finish();
+        }
     }
 
     @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
+        if(quickSelect){
+            Intent result = new Intent();
+            ArrayList<Uri> selectedUris = new ArrayList<Uri>();
+            selectedUris.add(item.uri);
+            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            ArrayList<String> selectedPaths = new ArrayList<String>();
+            selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
+            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            return;
+        }
         Intent intent = new Intent(this, AlbumPreviewActivity.class);
         intent.putExtra(AlbumPreviewActivity.EXTRA_ALBUM, album);
         intent.putExtra(AlbumPreviewActivity.EXTRA_ITEM, item);

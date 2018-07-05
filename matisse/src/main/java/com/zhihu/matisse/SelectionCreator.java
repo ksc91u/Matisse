@@ -321,6 +321,11 @@ public final class SelectionCreator {
         return this;
     }
 
+    public SelectionCreator setQuickSelect(boolean quick){
+        mSelectionSpec.quickSelect = quick;
+        return this;
+    }
+
     /**
      * Set listener for callback immediately when user check or uncheck original.
      *
