@@ -48,6 +48,7 @@ public class MediaSelectionFragment extends Fragment implements
     private SelectionProvider mSelectionProvider;
     private AlbumMediaAdapter.CheckStateListener mCheckStateListener;
     private AlbumMediaAdapter.OnMediaClickListener mOnMediaClickListener;
+    private boolean quickSelect = false;
 
     public static MediaSelectionFragment newInstance(Album album) {
         MediaSelectionFragment fragment = new MediaSelectionFragment();
@@ -92,7 +93,7 @@ public class MediaSelectionFragment extends Fragment implements
         Album album = getArguments().getParcelable(EXTRA_ALBUM);
 
         mAdapter = new AlbumMediaAdapter(getContext(),
-                mSelectionProvider.provideSelectedItemCollection(), mRecyclerView);
+                mSelectionProvider.provideSelectedItemCollection(), mRecyclerView, quickSelect);
         mAdapter.registerCheckStateListener(this);
         mAdapter.registerOnMediaClickListener(this);
         mRecyclerView.setHasFixedSize(true);
@@ -146,11 +147,27 @@ public class MediaSelectionFragment extends Fragment implements
     }
 
     @Override
+    public void onQuick(Item item) {
+        // notify outer Activity that check state changed
+        if (mCheckStateListener != null) {
+            mCheckStateListener.onQuick(item);
+        }
+    }
+
+    @Override
     public void onMediaClick(Album album, Item item, int adapterPosition) {
+        if(quickSelect){
+            mCheckStateListener.onQuick(item);
+            return;
+        }
         if (mOnMediaClickListener != null) {
             mOnMediaClickListener.onMediaClick((Album) getArguments().getParcelable(EXTRA_ALBUM),
                     item, adapterPosition);
         }
+    }
+
+    public void setQuickSelect(boolean quickSelect) {
+        this.quickSelect = quickSelect;
     }
 
     public interface SelectionProvider {

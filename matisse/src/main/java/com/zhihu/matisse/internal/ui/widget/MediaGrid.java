@@ -62,6 +62,10 @@ public class MediaGrid extends SquareFrameLayout implements View.OnClickListener
         mCheckView.setOnClickListener(this);
     }
 
+    public void hideCheck(){
+        mCheckView.setVisibility(View.GONE);
+    }
+
     @Override
     public void onClick(View v) {
         if (mListener != null) {
