@@ -1,7 +1,26 @@
 ![Image](/image/banner.png)
 
-# Matisse
+# Matisse - With Glide 4
+<!---
 [![Build Status](https://travis-ci.org/zhihu/Matisse.svg)](https://travis-ci.org/zhihu/Matisse) [ ![Download](https://api.bintray.com/packages/zhihu/maven/matisse/images/download.svg) ](https://bintray.com/zhihu/maven/matisse/_latestVersion)
+--->
+
+This is fork from original ZhiHu's Matisse with some changes.
+
+* Single select
+
+```java
+Matisse.from(activity)
+       .setQuickSelect(true)
+```
+
+* Use with Glide 4
+
+```java
+Matisse.from(activity)
+       .imageEngine(Glide4Engine())
+```
+
 
 Matisse is a well-designed local image and video selector for Android. You can  
 - Use it in Activity or Fragment
@@ -20,11 +39,11 @@ Gradle:
 
 ```groovy
 repositories {
-    jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    compile 'com.zhihu.android:matisse:$latest_version'
+    implementation 'com.github.ksc91u:Matisse:glide4-SNAPSHOT'
 }
 ```
 
