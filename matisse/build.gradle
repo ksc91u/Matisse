@@ -57,13 +57,22 @@ publish {
     userOrg = 'zhihu'
     groupId = 'com.zhihu.android'
     artifactId = 'matisse'
-    publishVersion = '0.5.2-beta2'
+    publishVersion = '0.5.2-beta4'
     desc = 'A well-designed local image selector for Android'
     website = 'https://www.zhihu.com/'
 }
 
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+}
+
 checkstyle {
     toolVersion = '7.6.1'
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
 }
 
 task checkstyle(type:Checkstyle) {

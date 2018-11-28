@@ -52,6 +52,7 @@ public final class SelectionSpec {
     public boolean hasInited;
     public OnSelectedListener onSelectedListener;
     public boolean originalable;
+    public boolean autoHideToobar;
     public int originalMaxSize;
     public OnCheckedListener onCheckedListener;
     public boolean quickSelect;
@@ -87,6 +88,7 @@ public final class SelectionSpec {
         imageEngine = new Glide4Engine();
         hasInited = true;
         originalable = false;
+        autoHideToobar = false;
         originalMaxSize = Integer.MAX_VALUE;
         quickSelect = false;
     }
