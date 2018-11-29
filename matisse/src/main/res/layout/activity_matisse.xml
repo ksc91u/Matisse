@@ -39,6 +39,19 @@
             android:gravity="center"
             android:textColor="?attr/album.element.color"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/selected_document"
+            android:layout_width="wrap_content"
+            android:layout_height="?actionBarSize"
+            android:drawableRight="@drawable/ic_baseline_folder_open_24px"
+            android:foreground="?selectableItemBackground"
+            android:layout_gravity="right"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:text="@string/more"
+            android:textColor="?attr/album.element.color"
+            android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

@@ -73,6 +73,7 @@ public class MatisseActivity extends AppCompatActivity implements
     public static final String EXTRA_RESULT_ORIGINAL_ENABLE = "extra_result_original_enable";
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
+    private static final int REQUEST_CODE_DOCUMENT = 25;
     public static final String CHECK_STATE = "checkState";
     private final AlbumCollection mAlbumCollection = new AlbumCollection();
     private MediaStoreCompat mMediaStoreCompat;
@@ -82,6 +83,7 @@ public class MatisseActivity extends AppCompatActivity implements
     private AlbumsSpinner mAlbumsSpinner;
     private AlbumsAdapter mAlbumsAdapter;
     private TextView mButtonPreview;
+    private TextView mButtonMore;
     private TextView mButtonApply;
     private View mContainer;
     private View mEmptyView;
@@ -133,8 +135,10 @@ public class MatisseActivity extends AppCompatActivity implements
 
         mButtonPreview = (TextView) findViewById(R.id.button_preview);
         mButtonApply = (TextView) findViewById(R.id.button_apply);
+        mButtonMore = (TextView) findViewById(R.id.selected_document);
         mButtonPreview.setOnClickListener(this);
         mButtonApply.setOnClickListener(this);
+        mButtonMore.setOnClickListener(this);
         mContainer = findViewById(R.id.container);
         mEmptyView = findViewById(R.id.empty_view);
         mOriginalLayout = findViewById(R.id.originalLayout);
@@ -241,6 +245,17 @@ public class MatisseActivity extends AppCompatActivity implements
                 MatisseActivity.this.revokeUriPermission(contentUri,
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             finish();
+        } else if (requestCode == REQUEST_CODE_DOCUMENT) {
+            Intent result = new Intent();
+            ArrayList<Uri> selectedUris = new ArrayList<>();
+            ArrayList<String> selectedPaths = new ArrayList<>();
+            selectedUris.add(data.getData());
+            selectedPaths.add(PathUtils.getPath(this, data.getData()));
+            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
+            setResult(RESULT_OK, result);
+            finish();
         }
     }
 
@@ -337,6 +352,14 @@ public class MatisseActivity extends AppCompatActivity implements
 
             if (mSpec.onCheckedListener != null) {
                 mSpec.onCheckedListener.onCheck(mOriginalEnable);
+            }
+        } else if (v.getId() == R.id.selected_document){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("*/*");
+                String[] mimetypes = {"image/*", "video/*"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+                startActivityForResult(intent, REQUEST_CODE_DOCUMENT);
             }
         }
     }
