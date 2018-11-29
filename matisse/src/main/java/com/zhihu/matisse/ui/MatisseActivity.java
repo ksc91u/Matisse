@@ -357,6 +357,8 @@ public class MatisseActivity extends AppCompatActivity implements
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.setType("*/*");
+                intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
                 String[] mimetypes = {"image/*", "video/*"};
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
                 startActivityForResult(intent, REQUEST_CODE_DOCUMENT);
