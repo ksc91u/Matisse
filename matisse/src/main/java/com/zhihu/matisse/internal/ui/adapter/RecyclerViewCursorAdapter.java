@@ -24,6 +24,7 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
 
     private Cursor mCursor;
     private int mRowIDColumn;
+    protected boolean notifyBindFirst = false;
 
     RecyclerViewCursorAdapter(Cursor c) {
         setHasStableIds(true);
@@ -86,6 +87,7 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
         if (newCursor != null) {
             mCursor = newCursor;
             mRowIDColumn = mCursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID);
+            notifyBindFirst = true;
             // notify the observers about the new cursor
             notifyDataSetChanged();
         } else {

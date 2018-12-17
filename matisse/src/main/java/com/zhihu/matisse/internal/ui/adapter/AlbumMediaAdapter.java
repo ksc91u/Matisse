@@ -128,6 +128,17 @@ public class AlbumMediaAdapter extends
                 mediaViewHolder.mMediaGrid.hideCheck();
             }
             setCheckStatus(item, mediaViewHolder.mMediaGrid);
+            if(notifyBindFirst && cursor.isFirst() && mOnMediaClickListener != null){
+                final Context context = mediaViewHolder.mMediaGrid.getContext();
+                mediaViewHolder.mMediaGrid.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkItem(item, context);
+                        notifyBindFirst = false;
+                    }
+                }, 200);
+
+            }
         }
     }
 
@@ -167,6 +178,13 @@ public class AlbumMediaAdapter extends
     public void onThumbnailClicked(ImageView thumbnail, Item item, RecyclerView.ViewHolder holder) {
         if (mOnMediaClickListener != null) {
             mOnMediaClickListener.onMediaClick(null, item, holder.getAdapterPosition());
+        }
+    }
+
+    private void checkItem(Item item, Context context){
+        if (assertAddSelection(context, item)) {
+            mSelectedCollection.add(item);
+            notifyCheckStateChanged();
         }
     }
 
